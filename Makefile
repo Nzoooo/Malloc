@@ -9,7 +9,7 @@ SRC		=	/src/malloc.c	\
 			/src/free.c		\
 			/src/calloc.c	\
 			/src/realloc.c	\
-			/src/reallocarray.c	\$
+			/src/reallocarray.c	\
 			/src/node.c
 
 MAIN	= 	main.c
