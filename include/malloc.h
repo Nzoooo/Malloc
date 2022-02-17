@@ -9,10 +9,10 @@
 
 #include <unistd.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct malloc_s {
     malloc_t *next;
-    malloc_t *previous;
     size_t size;
     void *allocate;
     int index;
