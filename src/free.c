@@ -16,5 +16,8 @@ void free(void *ptr)
     if (tmp == NULL || tmp->free)
         return;
     tmp->free = true;
-    sbrk(tmp->size * -1);
+    if (tmp->next == NULL) {
+        sbrk(tmp->size * -1);
+        tmp = NULL;
+    }
 }

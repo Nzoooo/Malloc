@@ -7,12 +7,12 @@
 
 #include "../include/malloc.h"
 
-static malloc_t *allNode = NULL;
+malloc_t *allNode = NULL;
 
 int search_free_position(size_t size, malloc_t *tmp)
 {
     while (tmp->next != NULL) {
-        if (tmp->size > size && tmp->free == true)
+        if (tmp->size >= size && tmp->free == true)
             break;
         tmp = tmp->next;
     }

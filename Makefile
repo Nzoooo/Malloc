@@ -5,19 +5,19 @@
 ## Makefile
 ##
 
-SRC		=	/src/malloc.c	\
-			/src/free.c		\
-			/src/calloc.c	\
-			/src/realloc.c	\
-			/src/reallocarray.c	\
-			/src/node.c
+SRC		=	src/malloc.c	\
+			src/free.c		\
+			src/calloc.c	\
+			src/realloc.c	\
+			src/reallocarray.c	\
+			src/node.c
 
 MAIN	= 	main.c
 
 OBJ		=	$(SRC:.c=.o)
 MAINOBJ	=	$(MAIN:.c=.o)
 
-CFLAGS	=	-Wall -Wextra -Werror -I./include
+CFLAGS	=	-Wall -Wextra -Werror -fpic -I./include
 
 LDFLAGS	=	-ldl
 
@@ -30,8 +30,7 @@ NAME	=	libmy_malloc.so
 all:	$(NAME)
 
 $(NAME):	$(OBJ)
-		$(CC) -c -fpic $(OBJ)
-		$(CC) -shared -o $(NAME) $(OBJ)
+		$(CC) -shared -o $(NAME) $(OBJ) $(CFLAGS)
 
 clean:
 		$(RM) -f $(OBJ)

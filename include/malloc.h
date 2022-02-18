@@ -12,7 +12,8 @@
 #include <string.h>
 
 typedef struct malloc_s {
-    malloc_t *next;
+    struct malloc_s *next;
+    struct malloc_s *previous;
     size_t size;
     void *allocate;
     int index;

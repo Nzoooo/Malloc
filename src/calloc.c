@@ -9,5 +9,7 @@
 
 void *calloc(size_t nmemb, size_t size)
 {
-    return (NULL);
+    size_t a = nmemb;
+    a = size;
+    return ((void *)a);
 }
