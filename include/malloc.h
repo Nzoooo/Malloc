@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 typedef struct malloc_s {
     struct malloc_s *next;
