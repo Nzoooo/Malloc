@@ -5,7 +5,7 @@
 ** reallocarray.c
 */
 
-#include <unistd.h>
+#include "../include/malloc.h"
 
 void *reallocarray(void *ptr, size_t nmemb, size_t size)
 {

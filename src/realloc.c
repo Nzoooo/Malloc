@@ -18,7 +18,7 @@ void *realloc(void *ptr, size_t size)
         tmp = tmp->next;
     if (tmp == NULL)
         return (malloc(size));
-    if (size <= tmp->size)
+    if (size + sizeof(struct malloc_s) <= tmp->size)
         return (ptr);
     if ((newPtr = malloc(size)) != NULL) {
         memcpy(newPtr, ptr, tmp->size);

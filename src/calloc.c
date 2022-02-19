@@ -5,11 +5,14 @@
 ** calloc.c
 */
 
-#include <unistd.h>
+#include "../include/malloc.h"
 
 void *calloc(size_t nmemb, size_t size)
 {
-    size_t a = nmemb;
-    a = size;
-    return ((void *)a);
+    void *allocate = malloc(nmemb * size);
+    
+    if (allocate == NULL)
+        return (NULL);
+    allocate = memset(allocate, 0, nmemb * size);
+    return (allocate);
 }

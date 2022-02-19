@@ -17,7 +17,7 @@ int find_nearest_size(malloc_t *tmp, size_t *nearestSize, int actualIndex)
     }
     if (nearestSize < tmp->size)
         return (actualIndex);
-    nearestSize = tmp->size;
+    *nearestSize = tmp->size;
     return (tmp->index);
 }
 
