@@ -16,7 +16,7 @@ typedef struct malloc_s {
     struct malloc_s *next;
     struct malloc_s *previous;
     size_t size;
-    void *allocate;
+    void *address;
     int index;
     bool free;
 } malloc_t;
@@ -29,6 +29,5 @@ void *realloc(void *ptr, size_t size);
 void *calloc(size_t nmemb, size_t size);
 void *reallocarray(void *ptr, size_t nmemb, size_t size);
 
-void *fill_first_node(size_t size);
-void *fill_node(size_t size, malloc_t *tmp);
-void *fill_free_node(size_t size, int index, malloc_t *tmp);
+malloc_t *fill_node(size_t size, malloc_t *tmp);
+void fill_free_node(size_t size, malloc_t *freeNode);

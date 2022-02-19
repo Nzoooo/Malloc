@@ -9,10 +9,10 @@
 
 void *calloc(size_t nmemb, size_t size)
 {
-    void *allocate = malloc(nmemb * size);
+    void *address = malloc(nmemb * size);
     
-    if (allocate == NULL)
+    if (address == NULL)
         return (NULL);
-    allocate = memset(allocate, 0, nmemb * size);
-    return (allocate);
+    address = memset(address, 0, nmemb * size);
+    return (address);
 }

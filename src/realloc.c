@@ -14,7 +14,7 @@ void *realloc(void *ptr, size_t size)
 
     if (size == 0)
         return (NULL);
-    while (tmp->allocate != ptr && tmp != NULL)
+    while (tmp->address != ptr && tmp != NULL)
         tmp = tmp->next;
     if (tmp == NULL)
         return (malloc(size));

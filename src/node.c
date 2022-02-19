@@ -17,70 +17,47 @@ void set_all_node_index()
     }
 }
 
-void *split_node(size_t size, malloc_t *tmp)
+malloc_t *split_node(size_t size, malloc_t *node)
 {
     malloc_t *newNode;
 
-    newNode = (malloc_t *)((char*)tmp + size);
-    newNode->previous = tmp;
-    newNode->next = tmp->next;
-    newNode->size = size;
-    newNode->allocate = (malloc_t *)((char*)tmp + size);
-    newNode->free = false;
-    tmp->size -= (size - sizeof(struct malloc_s));
-    tmp->next = newNode;
+    newNode = (malloc_t *)((char *)node + (size + sizeof(struct malloc_s)));
+    newNode->previous = node;
+    newNode->next = node->next;
+    newNode->size = node->size - size;
+    newNode->address = newNode + 1;
+    newNode->free = true;
     set_all_node_index();
-    return (newNode->allocate);
+    write(1, "a", 1);
+    return (newNode);
 }
 
-void *fill_first_node(size_t size)
+void fill_free_node(size_t size, malloc_t *freeNode)
+{
+    if (freeNode->size != size) {
+        freeNode->next = split_node(size, freeNode);
+        freeNode->size = size;
+    }
+    freeNode->free = false;
+}
+
+malloc_t *fill_node(size_t size, malloc_t *lastNode)
 {
     size_t realSize = 2;
+    malloc_t *currentNode = NULL;
 
-    while (realSize < size + sizeof(struct malloc_s))
+    while (realSize < size)
         realSize *= 2;
-    if (sbrk(realSize) == (void *)-1)
+    if ((currentNode = sbrk(realSize + sizeof(struct malloc_s))) == (void *)-1)
         return (NULL);
-    allNode = sbrk(0);
-    allNode->index = 0;
-    allNode->size = realSize;
-    allNode->allocate = sbrk(0);
-    allNode->free = false;
-    allNode->next = NULL;
-    allNode->previous = NULL;
-    if (allNode->size != (size + sizeof(struct malloc_s)))
-        return (split_node(size + sizeof(struct malloc_s), allNode));
-    return (allNode->allocate);
-}
-
-void *fill_free_node(size_t size, int index, malloc_t *tmp)
-{
-    while (tmp->index != index && tmp->next != NULL)
-        tmp = tmp->next;
-    if (tmp->size != (size + sizeof(struct malloc_s)))
-        return (split_node(size + sizeof(struct malloc_s), tmp));
-    tmp->free = false;
-    return (tmp->allocate);
-}
-
-void *fill_node(size_t size, malloc_t *tmp)
-{
-    size_t realSize = 2;
-
-    while (realSize < size + sizeof(struct malloc_s))
-        realSize *= 2;
-    while (tmp->next != NULL)
-        tmp = tmp->next;
-    if (sbrk(realSize) == (void *)-1)
-        return (NULL);
-    tmp->next = sbrk(0);
-    tmp->next->next = NULL;
-    tmp->next->previous = tmp;
-    tmp->next->index = tmp->index + 1;
-    tmp->next->size = realSize;
-    tmp->next->allocate = sbrk(0);
-    tmp->next->free = false;
-    if (tmp->next->size != (size + sizeof(struct malloc_s)))
-        return (split_node(size + sizeof(struct malloc_s), tmp->next));
-    return (tmp->next->allocate);
+    currentNode->next = NULL;
+    currentNode->previous = lastNode;
+    if (lastNode != NULL)
+        currentNode->index = lastNode->index + 1;
+    else
+        currentNode->index = 0;
+    currentNode->size = realSize;
+    currentNode->address = currentNode + 1;
+    currentNode->free = false;
+    return (currentNode);
 }

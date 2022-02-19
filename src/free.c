@@ -11,9 +11,9 @@ void free(void *ptr)
 {
     malloc_t *tmp = allNode;
 
-    while (tmp->allocate != ptr && tmp != NULL)
+    while (tmp->address != ptr && tmp != NULL)
         tmp = tmp->next;
-    if (tmp == NULL || tmp->free)
+    if (tmp == NULL || tmp->free == true)
         return;
     tmp->free = true;
     if (tmp->next == NULL) {

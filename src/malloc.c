@@ -11,7 +11,7 @@ malloc_t *allNode = NULL;
 
 int find_nearest_size(malloc_t *tmp, size_t *nearestSize, int actualIndex)
 {
-    if (nearestSize == 0) {
+    if (*nearestSize == 0) {
         *nearestSize = tmp->size;
         return (tmp->index);
     }
@@ -26,9 +26,8 @@ int search_free_position(size_t size, malloc_t *tmp)
     size_t nearestSize = 0;
     int findIndex = -1;
 
-    while (tmp->next != NULL) {
-        if (tmp->size >= (size + sizeof(struct malloc_s))
-            && tmp->free == true)
+    while (tmp != NULL) {
+        if (tmp->size >= size && tmp->free == true)
             findIndex = find_nearest_size(tmp, &nearestSize, findIndex);
         tmp = tmp->next;
     }
@@ -38,18 +37,24 @@ int search_free_position(size_t size, malloc_t *tmp)
 void *malloc(size_t size)
 {
     int freePosition = -1;
+    malloc_t *tmp = allNode;
 
     if (size == 0)
         return (NULL);
     if (allNode == NULL) {
-        allNode = fill_first_node(size);
-        if (allNode == NULL)
+        if ((allNode = fill_node(size, NULL)) == NULL)
             return (NULL);
-        return (allNode->allocate);
+        return (allNode->address);
     }
-    freePosition = search_free_position(size, allNode);
-    if (freePosition != -1) {
-        return (fill_free_node(size, freePosition, allNode));
+    if ((freePosition = search_free_position(size, tmp)) != -1) {
+        while (tmp->index != freePosition)
+            tmp = tmp->next;
+        fill_free_node(size, tmp);
+        return (tmp->address);
     }
-    return (fill_node(size, allNode));
+    while (tmp->next != NULL)
+        tmp = tmp->next;
+    if ((tmp->next = fill_node(size, tmp)) == NULL)
+        return (NULL);
+    return (tmp->next->address);
 }
