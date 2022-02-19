@@ -27,7 +27,7 @@ void *split_node(size_t size, malloc_t *tmp)
     newNode->size = size;
     newNode->allocate = (malloc_t *)((char*)tmp + size);
     newNode->free = false;
-    tmp->size -= size;
+    tmp->size -= (size - sizeof(struct malloc_s));
     tmp->next = newNode;
     set_all_node_index();
     return (newNode->allocate);
