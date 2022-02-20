@@ -52,7 +52,6 @@ void *malloc(size_t size)
     if (size == 0)
         return (NULL);
     if ((node = search_free_node(size, firstNode)) != NULL) {
-        write(1, "a ", 2);
         node = fill_free_node(size, node);
         return (node->address);
     }
