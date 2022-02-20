@@ -19,7 +19,8 @@ size_t make_size_power_of_2(size_t size)
     return (realSize);
 }
 
-malloc_t *find_nearest_size(malloc_t *tmp, size_t *nearestSize, malloc_t *actualNode)
+malloc_t *find_nearest_size(malloc_t *tmp, size_t *nearestSize,
+                            malloc_t *actualNode)
 {
     if (*nearestSize == 0) {
         *nearestSize = tmp->size;
