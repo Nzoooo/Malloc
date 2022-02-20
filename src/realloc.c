@@ -13,8 +13,10 @@ void *realloc(void *ptr, size_t size)
     malloc_t *tmp;
     void *newPtr = NULL;
 
-    if (size == 0)
+    if (size == 0) {
+        free(ptr);
         return (NULL);
+    }
     if (ptr == NULL)
         return (malloc(size));
     tmp = (malloc_t *)ptr - 1;
