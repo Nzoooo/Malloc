@@ -7,54 +7,57 @@
 
 #include "../include/malloc.h"
 
-malloc_t *allNode = NULL;
+malloc_t *firstNode = NULL;
+malloc_t *lastNode = NULL;
 
-int find_nearest_size(malloc_t *tmp, size_t *nearestSize, int actualIndex)
+size_t make_size_power_of_2(size_t size)
+{
+    size_t realSize = 2;
+
+    while (realSize <= size)
+        realSize *= 2;
+    return (realSize);
+}
+
+malloc_t *find_nearest_size(malloc_t *tmp, size_t *nearestSize, malloc_t *actualNode)
 {
     if (*nearestSize == 0) {
         *nearestSize = tmp->size;
-        return (tmp->index);
+        return (tmp);
     }
     if (*nearestSize < tmp->size)
-        return (actualIndex);
+        return (actualNode);
     *nearestSize = tmp->size;
-    return (tmp->index);
+    return (tmp);
 }
 
-int search_free_position(size_t size, malloc_t *tmp)
+malloc_t *search_free_node(size_t size, malloc_t *tmp)
 {
+    size_t realSize = make_size_power_of_2(size);
     size_t nearestSize = 0;
-    int findIndex = -1;
+    malloc_t *findNode = NULL;
 
     while (tmp != NULL) {
-        if (tmp->size >= size && tmp->free == true)
-            findIndex = find_nearest_size(tmp, &nearestSize, findIndex);
+        if (tmp->size >= realSize && tmp->free == true)
+            findNode = find_nearest_size(tmp, &nearestSize, findNode);
         tmp = tmp->next;
     }
-    return (findIndex);
+    return (findNode);
 }
 
 void *malloc(size_t size)
 {
-    int freePosition = -1;
-    malloc_t *tmp = allNode;
+    malloc_t *node;
 
     if (size == 0)
         return (NULL);
-    if (allNode == NULL) {
-        if ((allNode = fill_node(size, NULL)) == NULL)
-            return (NULL);
-        return (allNode->address);
+    if ((node = search_free_node(size, firstNode)) != NULL) {
+        node = fill_free_node(size, node);
+        return (node->address);
     }
-    if ((freePosition = search_free_position(size, tmp)) != -1) {
-        while (tmp->index != freePosition)
-            tmp = tmp->next;
-        fill_free_node(size, tmp);
-        return (tmp->address);
-    }
-    while (tmp->next != NULL)
-        tmp = tmp->next;
-    if ((tmp->next = fill_node(size, tmp)) == NULL)
+    if ((node = create_node(size)) == NULL)
         return (NULL);
-    return (tmp->next->address);
+    lastNode = node;
+    push_node(firstNode, node);
+    return (node->address);
 }

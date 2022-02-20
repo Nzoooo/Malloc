@@ -15,11 +15,8 @@ SRC		=	src/malloc.c	\
 MAIN	= 	main.c
 
 OBJ		=	$(SRC:.c=.o)
-MAINOBJ	=	$(MAIN:.c=.o)
 
 CFLAGS	=	-Wall -Wextra -Werror -fpic -I./include
-
-LDFLAGS	=	-ldl
 
 CC		=	gcc
 
@@ -39,8 +36,5 @@ fclean:	clean
 		$(RM) -f $(NAME)
 
 re:		fclean all
-
-c:		$(MAINOBJ)
-		$(CC) -o a.out $(MAINOBJ) $(LDFLAGS)
 
 .PHONY:	fclean clean re all

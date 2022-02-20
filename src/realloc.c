@@ -9,16 +9,16 @@
 
 void *realloc(void *ptr, size_t size)
 {
-    malloc_t *tmp = allNode;
+    size_t realSize = make_size_power_of_2(size);
+    malloc_t *tmp;
     void *newPtr = NULL;
 
     if (size == 0)
         return (NULL);
-    while (tmp->address != ptr && tmp != NULL)
-        tmp = tmp->next;
-    if (tmp == NULL)
+    if (ptr == NULL)
         return (malloc(size));
-    if (size + sizeof(struct malloc_s) <= tmp->size)
+    tmp = (malloc_t *)ptr - 1;
+    if (realSize <= tmp->size)
         return (ptr);
     if ((newPtr = malloc(size)) != NULL) {
         memcpy(newPtr, ptr, tmp->size);
