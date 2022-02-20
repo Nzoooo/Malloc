@@ -7,16 +7,17 @@
 
 #include "../include/malloc.h"
 
-void push_node(malloc_t *tmp, malloc_t *newNode)
+malloc_t *push_node(malloc_t *tmp, malloc_t *newNode)
 {
     if (firstNode == NULL) {
         firstNode = newNode;
-        return;
+        return (firstNode);
     }
     while (tmp->next != NULL)
         tmp = tmp->next;
     tmp->next = newNode;
     tmp->next->previous = tmp;
+    return (tmp->next);
 }
 
 malloc_t *split_node(size_t size, malloc_t *node)
