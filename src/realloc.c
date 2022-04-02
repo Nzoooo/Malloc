@@ -9,22 +9,22 @@
 
 void *realloc(void *ptr, size_t size)
 {
-    size_t realSize = make_size_power_of_2(size);
     malloc_t *tmp;
     void *newPtr = NULL;
 
+    if (ptr == NULL)
+        return (malloc(size));
     if (size == 0) {
         free(ptr);
         return (NULL);
     }
-    if (ptr == NULL)
-        return (malloc(size));
     tmp = (malloc_t *)ptr - 1;
-    if (realSize <= tmp->size)
-        return (ptr);
     if ((newPtr = malloc(size)) != NULL) {
-        memcpy(newPtr, ptr, tmp->size);
+        if (tmp->size > make_size_power_of_2(size))
+            memcpy(newPtr, ptr, make_size_power_of_2(size));
+        else
+            memcpy(newPtr, ptr, tmp->size);
         free(ptr);
     }
-    return (NULL);
+    return (newPtr);
 }

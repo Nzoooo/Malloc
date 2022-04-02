@@ -10,7 +10,7 @@
 void *calloc(size_t nmemb, size_t size)
 {
     void *address = malloc(nmemb * size);
-    
+
     if (address == NULL)
         return (NULL);
     address = memset(address, 0, nmemb * size);

@@ -9,6 +9,7 @@
 
 #include <unistd.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -21,7 +22,6 @@ typedef struct malloc_s {
 } malloc_t;
 
 extern malloc_t *firstNode;
-extern malloc_t *lastNode;
 
 void *malloc(size_t size);
 void free(void *ptr);
@@ -32,5 +32,6 @@ void *reallocarray(void *ptr, size_t nmemb, size_t size);
 malloc_t *create_node(size_t size);
 malloc_t *fill_free_node(size_t size, malloc_t *freeNode);
 malloc_t *push_node(malloc_t *tmp, malloc_t *newNode);
+size_t search_highest_free_size(malloc_t *tmp);
 
 size_t make_size_power_of_2(size_t size);

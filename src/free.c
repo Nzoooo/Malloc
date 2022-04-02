@@ -9,12 +9,10 @@
 
 malloc_t *merge_free_node(malloc_t *node)
 {
-    malloc_t *nextNode = node->next;
-
-    node->size += nextNode->size + sizeof(struct malloc_s);
-    nextNode = nextNode->next;
-    if (nextNode != NULL)
-        nextNode->previous = node;
+    node->size += node->next->size + sizeof(struct malloc_s);
+    node->next = node->next->next;
+    if (node->next != NULL)
+        node->next->previous = node;
     return (node);
 }
 
@@ -31,10 +29,9 @@ void free(void *ptr)
     if (tmp->previous != NULL && tmp->previous->free == true)
         tmp = merge_free_node(tmp->previous);
     if (tmp->next == NULL) {
-        if (firstNode == lastNode) {
+        if (firstNode->next == NULL) {
             sbrk(-(firstNode->size + sizeof(struct malloc_s)));
             firstNode = NULL;
-            lastNode = NULL;
         } else {
             tmp->previous->next = NULL;
             sbrk(-(tmp->size + sizeof(struct malloc_s)));
