@@ -52,7 +52,7 @@ void *malloc(size_t size)
     malloc_t *node;
 
     if ((node = search_free_node(size, firstNode)) != NULL) {
-        node = fill_free_node(size, node);
+        node = fill_free_node(node);
         return (node->address);
     }
     if ((node = create_node(size)) == NULL)

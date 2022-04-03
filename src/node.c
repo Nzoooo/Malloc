@@ -36,14 +36,8 @@ malloc_t *split_node(size_t size, malloc_t *node)
     return (newNode);
 }
 
-malloc_t *fill_free_node(size_t size, malloc_t *freeNode)
+malloc_t *fill_free_node(malloc_t *freeNode)
 {
-    size_t realSize = make_size_power_of_2(size);
-
-    // if (freeNode->size > realSize) {
-    //     freeNode->next = split_node(realSize, freeNode);
-    //     freeNode->size = realSize;
-    // }
     freeNode->free = false;
     return (freeNode);
 }
