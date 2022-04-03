@@ -29,12 +29,7 @@ void free(void *ptr)
     if (tmp->previous != NULL && tmp->previous->free == true)
         tmp = merge_free_node(tmp->previous);
     if (tmp->next == NULL) {
-        if (firstNode->next == NULL) {
-            sbrk(-(firstNode->size + sizeof(struct malloc_s)));
-            firstNode = NULL;
-        } else {
-            tmp->previous->next = NULL;
-            sbrk(-(tmp->size + sizeof(struct malloc_s)));
-        }
+        tmp->previous->next = NULL;
+        sbrk(-(tmp->size + sizeof(struct malloc_s)));
     }
 }

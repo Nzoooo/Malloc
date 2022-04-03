@@ -31,7 +31,7 @@ void *reallocarray(void *ptr, size_t nmemb, size_t size);
 
 malloc_t *create_node(size_t size);
 malloc_t *fill_free_node(size_t size, malloc_t *freeNode);
-malloc_t *push_node(malloc_t *tmp, malloc_t *newNode);
+malloc_t *push_node(malloc_t *newNode);
 size_t search_highest_free_size(malloc_t *tmp);
 
 size_t make_size_power_of_2(size_t size);
