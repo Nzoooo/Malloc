@@ -7,12 +7,13 @@
 
 #include "../include/malloc.h"
 
-malloc_t *push_node(malloc_t *tmp, malloc_t *newNode)
+malloc_t *push_node(malloc_t *newNode)
 {
-    if (firstNode == NULL) {
-        firstNode = newNode;
-        return (firstNode);
-    }
+    malloc_t *tmp = NULL;
+
+    if (firstNode == NULL)
+        firstNode = create_node(0);
+    tmp = firstNode;
     while (tmp->next != NULL)
         tmp = tmp->next;
     newNode->previous = tmp;
@@ -37,7 +38,7 @@ malloc_t *split_node(size_t size, malloc_t *node)
 
 malloc_t *fill_free_node(size_t size, malloc_t *freeNode)
 {
-    // size_t realSize = make_size_power_of_2(size);
+    size_t realSize = make_size_power_of_2(size);
 
     // if (freeNode->size > realSize) {
     //     freeNode->next = split_node(realSize, freeNode);

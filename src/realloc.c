@@ -19,11 +19,13 @@ void *realloc(void *ptr, size_t size)
         return (NULL);
     }
     tmp = (malloc_t *)ptr - 1;
+    if (make_size_power_of_2(size) == tmp->size || size == tmp->size)
+        return (ptr);
     if ((newPtr = malloc(size)) != NULL) {
-        if (tmp->size > make_size_power_of_2(size))
-            memcpy(newPtr, ptr, make_size_power_of_2(size));
-        else
+        if (tmp->size < make_size_power_of_2(size))
             memcpy(newPtr, ptr, tmp->size);
+        else
+            memcpy(newPtr, ptr, make_size_power_of_2(size));
         free(ptr);
     }
     return (newPtr);

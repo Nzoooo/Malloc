@@ -33,36 +33,30 @@ malloc_t *find_nearest_size(malloc_t *tmp, size_t *nearestSize,
 
 malloc_t *search_free_node(size_t size, malloc_t *tmp)
 {
-    // size_t realSize = make_size_power_of_2(size);
-    // size_t nearestSize = 0;
-    // malloc_t *findNode = NULL;
+    size_t realSize = make_size_power_of_2(size);
+    size_t nearestSize = 0;
+    malloc_t *findNode = NULL;
 
-    // while (tmp != NULL) {
-    //     if (tmp->size == realSize && tmp->free == true)
-    //         return (tmp);
-    //     if (tmp->size >= realSize && tmp->free == true)
-    //         findNode = find_nearest_size(tmp, &nearestSize, findNode);
-    //     tmp = tmp->next;
-    // }
     while (tmp != NULL) {
-        if (tmp->size >= (size + sizeof(struct malloc_s)) && tmp->free == true)
+        if (tmp->size == realSize && tmp->free == true)
             return (tmp);
+        if (tmp->size >= realSize && tmp->free == true)
+            findNode = find_nearest_size(tmp, &nearestSize, findNode);
         tmp = tmp->next;
     }
-    return (NULL);
-    // return (findNode);
+    return (findNode);
 }
 
 void *malloc(size_t size)
 {
     malloc_t *node;
 
-    // if ((node = search_free_node(size, firstNode)) != NULL) {
-    //     node = fill_free_node(size, node);
-    //     return (node->address);
-    // }
+    if ((node = search_free_node(size, firstNode)) != NULL) {
+        node = fill_free_node(size, node);
+        return (node->address);
+    }
     if ((node = create_node(size)) == NULL)
         return (NULL);
-    push_node(firstNode, node);
+    push_node(node);
     return (node->address);
 }
