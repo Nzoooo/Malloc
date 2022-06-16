@@ -5,13 +5,14 @@
 ** calloc.c
 */
 
-#include "../include/malloc.h"
+#include "malloc.h"
 
 void *calloc(size_t nmemb, size_t size)
 {
-    void *address = malloc(nmemb * size);
+    void *address = NULL;
 
-    if (address == NULL)
+    address = malloc(nmemb * size);
+    if (!address)
         return (NULL);
     address = memset(address, 0, nmemb * size);
     return (address);

@@ -5,14 +5,23 @@
 ** free.c
 */
 
-#include "../include/malloc.h"
+#include "malloc.h"
 
-malloc_t *merge_free_node(malloc_t *node)
+malloc_t *merge_frees_node(malloc_t *node)
 {
-    node->size += node->next->size + sizeof(struct malloc_s);
-    node->next = node->next->next;
-    if (node->next != NULL)
-        node->next->previous = node;
+    if (node->next && node->next->free) {
+        node->size += node->next->size + sizeof(malloc_t);
+        node->next = node->next->next;
+        if (node->next)
+            node->next->previous = node;
+    }
+    if (node->previous && node->previous->free) {
+        node->previous->size += node->previous->next->size + sizeof(malloc_t);
+        node->previous->next = node->previous->next->next;
+        if (node->previous->next)
+            node->previous->next->previous = node->previous;
+        return (node->previous);
+    }
     return (node);
 }
 
@@ -20,16 +29,15 @@ void free(void *ptr)
 {
     malloc_t *tmp;
 
-    if (ptr == NULL || ptr < firstNode->address || ptr > sbrk(0))
-        return;
-    tmp = (malloc_t *)ptr - 1;
-    tmp->free = true;
-    if (tmp->next != NULL && tmp->next->free == true)
-        tmp = merge_free_node(tmp);
-    if (tmp->previous != NULL && tmp->previous->free == true)
-        tmp = merge_free_node(tmp->previous);
-    if (tmp->next == NULL) {
-        tmp->previous->next = NULL;
-        sbrk(-(tmp->size + sizeof(struct malloc_s)));
+    if (ptr && ptr >= (void *)firstNode && ptr <= sbrk(0)) {
+        tmp = (malloc_t *)ptr - 1;
+        if (tmp->address != ptr)
+            return;
+        tmp->free = true;
+        tmp = merge_frees_node(tmp);
+        if (!tmp->next) {
+            tmp->previous->next = NULL;
+            sbrk(-make_size_page_multiple(tmp->size + sizeof(malloc_t)));
+        }
     }
 }
